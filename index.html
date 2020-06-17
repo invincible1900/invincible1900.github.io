@@ -104,12 +104,12 @@
 <h4 id="1-2-VPS提供商"><a href="#1-2-VPS提供商" class="headerlink" title="1.2 VPS提供商"></a>1.2 VPS提供商</h4><p><a href="https://www.bwh1.net/" target="_blank" rel="noopener">Bandwagon</a>：介绍略</p>
 <p><a href="https://www.vultr.com/" target="_blank" rel="noopener">Vultr</a>：介绍略</p>
 <h4 id="1-3-推荐"><a href="#1-3-推荐" class="headerlink" title="1.3 推荐"></a>1.3 推荐</h4><p>我用的Bandwagon，使用非常非常方便，购买也非常非常方便，但是最近网速极慢，ssh连上去都得半天，换了几个服务器地点也不行，问题暂时还没解决。所有最近看的本文的同学可以看看Vultr的服务器。</p>
-<h3 id="2-服务器配置"><a href="#2-服务器配置" class="headerlink" title="2. 服务器配置"></a>2. 服务器配置</h3><h4 id="2-1-ssh连接到服务器"><a href="#2-1-ssh连接到服务器" class="headerlink" title="2.1 ssh连接到服务器"></a>2.1 ssh连接到服务器</h4><h4 id="2-2-安装ssserver"><a href="#2-2-安装ssserver" class="headerlink" title="2.2 安装ssserver"></a>2.2 安装ssserver</h4><p><img src="https://i.imgur.com/1zRlEfo.png" alt="ssh1"></p>
+<h3 id="2-服务器配置"><a href="#2-服务器配置" class="headerlink" title="2. 服务器配置"></a>2. 服务器配置</h3><h4 id="2-1-ssh连接到服务器"><a href="#2-1-ssh连接到服务器" class="headerlink" title="2.1 ssh连接到服务器"></a>2.1 ssh连接到服务器</h4><h4 id="2-2-安装ssserver"><a href="#2-2-安装ssserver" class="headerlink" title="2.2 安装ssserver"></a>2.2 安装ssserver</h4><p><img src="https://gitee.com/invincible1900/pictures/raw/master/ssh1.PNG" alt="ssh1"></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install shadowsocks</span><br></pre></td></tr></table></figure>
 
 <p>说明：</p>
 <p>安装shadowsocks服务程序</p>
-<h4 id="2-3-启动代理服务器"><a href="#2-3-启动代理服务器" class="headerlink" title="2.3 启动代理服务器"></a>2.3 启动代理服务器</h4><p><img src="https://i.imgur.com/e8Zdpbv.png" alt="ss_install"></p>
+<h4 id="2-3-启动代理服务器"><a href="#2-3-启动代理服务器" class="headerlink" title="2.3 启动代理服务器"></a>2.3 启动代理服务器</h4><p><img src="https://gitee.com/invincible1900/pictures/raw/master/ssh2.PNG" alt="ss_install"></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssserver -s ::0 -p 443 -k d2h5aW1zb2hhbmRzb21l -m aes-256-cfb</span><br></pre></td></tr></table></figure>
 
 <p>说明：</p>
@@ -125,7 +125,7 @@
 <li>安卓端<a href="https://github.com/shadowsocks/shadowsocks-android/releases/download/v2.9.11/shadowsocks-nightly-2.9.11.apk" target="_blank" rel="noopener">下载</a></li>
 <li>IOS端<a href="https://itunes.apple.com/cn/app/shadowrocket-for-shadowsocks/id932747118" target="_blank" rel="noopener">下载</a></li>
 </ul>
-<h4 id="3-2-客户端配置"><a href="#3-2-客户端配置" class="headerlink" title="3.2 客户端配置"></a>3.2 客户端配置</h4><p><img src="https://i.imgur.com/RjCUTjM.png" alt="ssclient"> </p>
+<h4 id="3-2-客户端配置"><a href="#3-2-客户端配置" class="headerlink" title="3.2 客户端配置"></a>3.2 客户端配置</h4><p><img src="https://gitee.com/invincible1900/pictures/raw/master/ssclient.PNG" alt="ssclient"> </p>
 <p>说明：</p>
 <ul>
 <li>IP填你服务器的公网IP地址</li>
@@ -140,7 +140,7 @@
 
 
 <p>客户端：</p>
-<p><img src="https://i.imgur.com/RjCUTjM.png" alt="ssclient"></p>
+<p><img src="https://gitee.com/invincible1900/pictures/raw/master/ssclient.PNG" alt="ssclient"></p>
 
                                                                         
                                     </div>
