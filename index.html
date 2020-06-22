@@ -99,52 +99,79 @@
                                             
 
                                                 
-                                                                    <p>This article records how to access the overseas network  </p>
-<h3 id="0-In-short"><a href="#0-In-short" class="headerlink" title="0.In short"></a>0.In short</h3><p>If you have some basic knowledge about linux and proxy,  all you need is this:  </p>
-<p>On Linux server：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install shadowsocks</span><br><span class="line">ssserver -s ::0 -p 443 -k d2h5aW1zb2hhbmRzb21l -m aes-256-cfb</span><br></pre></td></tr></table></figure>
-
-
-<p>On your host：  </p>
-<p><img src="https://gitee.com/invincible1900/pictures/raw/master/ssclient.PNG" alt="ssclient"></p>
-<p>If you don’t , then follow the steps below.</p>
-<h3 id="1-Purchase-VPS-server"><a href="#1-Purchase-VPS-server" class="headerlink" title="1.Purchase VPS server"></a>1.Purchase VPS server</h3><h4 id="1-1-How-to-choose"><a href="#1-1-How-to-choose" class="headerlink" title="1.1 How to choose"></a>1.1 How to choose</h4><p>It is enough to choose the chepeast one, with centos or ubuntu. (ubuntu is illustrated in this article)</p>
-<h4 id="1-2-Where-to-buy"><a href="#1-2-Where-to-buy" class="headerlink" title="1.2 Where to buy"></a>1.2 Where to buy</h4><p><a href="https://www.bwh1.net/" target="_blank" rel="noopener">Bandwagon</a></p>
-<p><a href="https://www.vultr.com/" target="_blank" rel="noopener">Vultr</a></p>
-<h4 id="1-3-My-choise"><a href="#1-3-My-choise" class="headerlink" title="1.3 My choise"></a>1.3 My choise</h4><p>Bandwagon is very convenient to purchase(it support alipay) and deploy(with just one click). But it became very slow recently, and took years to connect through ssh. I don’t know if this situation will  improve, maybe you can try higher performance one or try vultr.</p>
-<h3 id="2-Deploy"><a href="#2-Deploy" class="headerlink" title="2. Deploy"></a>2. Deploy</h3><h4 id="2-1-Connect-to-your-vps-through-ssh"><a href="#2-1-Connect-to-your-vps-through-ssh" class="headerlink" title="2.1 Connect to your vps through ssh"></a>2.1 Connect to your vps through ssh</h4><h4 id="2-2-Install-ssserver"><a href="#2-2-Install-ssserver" class="headerlink" title="2.2 Install ssserver"></a>2.2 Install ssserver</h4><p><img src="https://gitee.com/invincible1900/pictures/raw/master/ssh1.PNG" alt="ssh1"></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install shadowsocks</span><br></pre></td></tr></table></figure>
-
-<p>This command is to install shadowsocks server program which is a part of the proxy program .</p>
-<h4 id="2-3-Start-shadowsocks-server-program"><a href="#2-3-Start-shadowsocks-server-program" class="headerlink" title="2.3 Start shadowsocks server program"></a>2.3 Start shadowsocks server program</h4><p><img src="https://gitee.com/invincible1900/pictures/raw/master/ssh2.PNG" alt="ss_install"></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssserver -s ::0 -p 443 -k d2h5aW1zb2hhbmRzb21l -m aes-256-cfb</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>443</code> is the port that the shadowsocks server program is to listen on ( you can modify it yourself )</li>
-<li><code>d2h5aW1zb2hhbmRzb21l</code> is the password ( you need to modify it yourself) </li>
-<li><code>aes-256-cfb</code>     is encrypt method ( no need to modify )</li>
-<li><code>::0</code> means it can be connected from all ips  ( no need to modify )</li>
-</ul>
-<p>After this step, you have finished the deployment on server machine(your purchased vps), now it’s time to get back to your host machine to install and deploy shadowsocks client program.</p>
-<h3 id="3-Install-shadowsocks-client-program"><a href="#3-Install-shadowsocks-client-program" class="headerlink" title="3.Install shadowsocks client program"></a>3.Install shadowsocks client program</h3><h4 id="3-1-Download"><a href="#3-1-Download" class="headerlink" title="3.1 Download"></a>3.1 Download</h4><ul>
-<li>windwos client <a href="https://github.com/shadowsocks/shadowsocks-windows/releases/download/2.5.8/Shadowsocks-2.5.8.zip" target="_blank" rel="noopener">Download</a></li>
-<li>Mac client <a href="https://github.com/shadowsocks/shadowsocks-iOS/releases/download/2.6.3/ShadowsocksX-2.6.3.dmg" target="_blank" rel="noopener">Download</a></li>
-<li>Android client <a href="https://github.com/shadowsocks/shadowsocks-android/releases/download/v2.9.11/shadowsocks-nightly-2.9.11.apk" target="_blank" rel="noopener">Download</a></li>
-<li>IOS client <a href="https://itunes.apple.com/cn/app/shadowrocket-for-shadowsocks/id932747118" target="_blank" rel="noopener">Download</a></li>
-</ul>
-<p>Download and install.</p>
-<h4 id="3-2-Deploy"><a href="#3-2-Deploy" class="headerlink" title="3.2 Deploy"></a>3.2 Deploy</h4><p><img src="https://gitee.com/invincible1900/pictures/raw/master/ssclient.PNG" alt="ssclient"> </p>
-<ul>
-<li><code>服务器 IP</code> is your vps’s ip(the same as your ssh target)</li>
-<li><code>服务器端口</code> is the port you typed in the command in part 2.3 ( <code>443</code> )</li>
-<li><code>密码</code> is the password you typed in the command in part 2.3 ( <code>d2h5aW1zb2hhbmRzb21l</code> )</li>
-<li><code>加密</code> is the encrypt method you typed in the command in part 2.3 ( <code>aes-256-cfb</code> )</li>
-</ul>
-
-                                                                        
+                                                    <p>This article records how to access the overseas network  </p>
+                                                        
+                                                            <a class="article-more-link" href="/2020/06/17/Break%20the%20wall,%20easy%20like%20123/">
+                                                                Read More...
+                                                            </a>
+                                                            
+                                                                
                                     </div>
                                     <footer class="article-footer">
                                         <a data-url="http://yoursite.com/2020/06/17/Break%20the%20wall,%20easy%20like%20123/" data-id="ckbiq75sp0000508w1i3odif2" class="article-share-link">
+                                            Share
+                                        </a>
+                                        
+                                    </footer>
+
+    </div>
+
+    
+
+                
+
+</article>
+        
+          <article id="post-Memory management(1)" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+  
+    <h2 itemprop="name">
+      <a class="article-title" href="/2020/06/17/Memory%20management(1)/">Memory Management(1) - Hardware Level</a>
+    </h2>
+  
+  
+
+
+
+
+            </header>
+            
+
+                
+                    <div class="article-meta">
+                        <a href="/2020/06/17/Memory%20management(1)/" class="article-date">
+  <time datetime="2020-06-17T02:22:39.340Z" itemprop="datePublished">2020-06-17</time>
+</a>
+                            
+                    </div>
+                    
+
+                        
+
+                                    <div class="article-entry" itemprop="articleBody">
+                                        
+
+
+                                            
+
+                                                
+                                                    <p>In this article, I will represent some concepts related to memory management from the perspective of hardware (specifically Intel 80386).  </p>
+<p>Most of the content comes from <a href="https://css.csail.mit.edu/6.858/2014/readings/i386.pdf" target="_blank" rel="noopener">this document</a>.    </p>
+<p>What I have done is to extract  basic content and draw the relationship between concepts.  </p>
+<p>To understand the <a href="">following article</a>, you should keep in mind all the concepts mentioned below.  </p>
+                                                        
+                                                            <a class="article-more-link" href="/2020/06/17/Memory%20management(1)/">
+                                                                Read More...
+                                                            </a>
+                                                            
+                                                                
+                                    </div>
+                                    <footer class="article-footer">
+                                        <a data-url="http://yoursite.com/2020/06/17/Memory%20management(1)/" data-id="ckbqdxsyr0000it8w9rgmbwqq" class="article-share-link">
                                             Share
                                         </a>
                                         
