@@ -24,6 +24,9 @@
   
 <script src="/js/pace.min.js"></script>
 
+  <link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+  <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 <body>
@@ -93,16 +96,30 @@
 <h4 id="Page-Frame-Address"><a href="#Page-Frame-Address" class="headerlink" title="Page Frame Address"></a>Page Frame Address</h4><p>The page frame address specifies the physical starting address of a page.  </p>
 <p>Because pages are located on 4K boundaries, the low-order 12 bits are always zero.   </p>
 <h4 id="Linear-Address"><a href="#Linear-Address" class="headerlink" title="Linear Address"></a>Linear Address</h4><p>A linear address refers indirectly to a physical address by specifying a page table, a page within that table, and an offset within that page.  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">31        22  21       12 11           0</span><br><span class="line"> ---------------------------------------</span><br><span class="line">|    DIR    |    PAGE    |    OFFSET    |</span><br><span class="line"> ---------------------------------------</span><br></pre></td></tr></table></figure>
-<p>The addressing mechanism uses the<code>DIR</code> field as an index into a <code>page directory</code>, </p>
+<pre><code>31        22  21       12 11           0
+ ---------------------------------------
+|    DIR    |    PAGE    |    OFFSET    |
+ ---------------------------------------</code></pre><p>The addressing mechanism uses the<code>DIR</code> field as an index into a <code>page directory</code>, </p>
 <p>uses the <code>PAGE</code> field as an index into the <code>page table</code> determined by the <code>page directory</code>, and </p>
 <p>uses the <code>OFFSET</code> field to address a byte within the <code>page</code> determined by the <code>page table</code>.</p>
 <h4 id="Page-Tables"><a href="#Page-Tables" class="headerlink" title="Page Tables"></a>Page Tables</h4><p>A page table is simply an array of 32-bit page specifiers.   </p>
 <p>A page table is itself a page, and therefore contains 4 Kilobytes of memory or at most 1K 32-bit entries.  </p>
 <p>The physical address of the current page directory is stored in the CPU register CR3, also called the page directory base register (PDBR).   </p>
 <h4 id="Page-Table-Entries"><a href="#Page-Table-Entries" class="headerlink" title="Page-Table Entries"></a>Page-Table Entries</h4><p>Format of a Page Table Entry  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">31 											12  11                                       0</span><br><span class="line"> ------------------------------------------------------------------------</span><br><span class="line">| PAGE FRAME ADDRESS 31...12 | AVAIL | 0 0 | D | A | 0 0 | U&#x2F;S | R&#x2F;W | P |</span><br><span class="line"> ------------------------------------------------------------------------</span><br><span class="line"> </span><br><span class="line"> P      - PRESENT</span><br><span class="line"> R&#x2F;W    - READ&#x2F;WRITE</span><br><span class="line"> U&#x2F;S    - USER&#x2F;SUPERVISOR</span><br><span class="line"> A      - ACCESSED </span><br><span class="line"> D      - DIRTY</span><br><span class="line"> AVAIL  - AVAILABLE FOR SYSTEMS PROGRAMMER USE</span><br><span class="line"> </span><br><span class="line">NOTE: 0 INDICATES INTEL RESERVED. DO NOT DEFINE.</span><br></pre></td></tr></table></figure>
-<ul>
+<pre><code>31                                             12  11                                       0
+ ------------------------------------------------------------------------
+| PAGE FRAME ADDRESS 31...12 | AVAIL | 0 0 | D | A | 0 0 | U/S | R/W | P |
+ ------------------------------------------------------------------------
+
+ P      - PRESENT
+ R/W    - READ/WRITE
+ U/S    - USER/SUPERVISOR
+ A      - ACCESSED 
+ D      - DIRTY
+ AVAIL  - AVAILABLE FOR SYSTEMS PROGRAMMER USE
+
+NOTE: 0 INDICATES INTEL RESERVED. DO NOT DEFINE.
+</code></pre><ul>
 <li><p>Present Bit<br>The Present bit indicates whether a page table entry can be used in address translation. P=1 indicates that the entry can be used.  </p>
 </li>
 <li><p>Read/Write and User/Supervisor Bits<br>These bits are not used for address translation, but are used for page-level protection.  </p>
@@ -114,15 +131,13 @@
 <p>An operating system that supports paged virtual memory can use these bits to determine what pages to eliminate from physical memory when the demand for memory exceeds the physical memory available. The operating system is responsible for testing and clearing these bits.  </p>
 <h4 id="Page-Translation-Cache"><a href="#Page-Translation-Cache" class="headerlink" title="Page Translation Cache"></a>Page Translation Cache</h4><p>For greatest efficiency in address translation, the processor stores the most recently used page-table data in an on-chip cache.  </p>
 <p>operating-system programmers must flush the cache whenever the page tables are changed. The page-translation cache can be flushed by either of two methods:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. By reloading CR3 with a MOV instruction; for example: MOV CR3, EAX</span><br><span class="line">2. By performing a task switch to a TSS that has a different CR3 image than the current TSS.</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="Mind-mapping"><a href="#Mind-mapping" class="headerlink" title="Mind mapping"></a>Mind mapping</h3><p> <img src="https://gitee.com/invincible1900/pictures/raw/master/page_traslation_80386.png" alt="page_translation"></p>
+<pre><code>1. By reloading CR3 with a MOV instruction; for example: MOV CR3, EAX
+2. By performing a task switch to a TSS that has a different CR3 image than the current TSS. </code></pre><h3 id="Mind-mapping"><a href="#Mind-mapping" class="headerlink" title="Mind mapping"></a>Mind mapping</h3><p> <img src="https://gitee.com/invincible1900/pictures/raw/master/page_traslation_80386.png" alt="page_translation"></p>
 
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://yoursite.com/2020/06/17/Memory%20management(1)/" data-id="ckbqdxsyr0000it8w9rgmbwqq" class="article-share-link">
+                                        <a data-url="http://yoursite.com/2020/06/17/Memory%20management(1)/" data-id="ckbqhwlpa00002z8w0ide9bo7" class="article-share-link">
                                             Share
                                         </a>
                                         
@@ -134,15 +149,11 @@
         
   <nav class="article-nav">
     
-      <a href="/2020/06/17/Break%20the%20wall,%20easy%20like%20123/" class="article-nav-link">
-        <strong class="article-nav-caption">Newer</strong>
-        <div class="article-nav-title">
-          
-            Break the wall, easy like 123
-          
-        </div>
-      </a>
     
+      <a href="/2020/06/17/Break%20the%20wall,%20easy%20like%20123/" class="article-nav-link">
+        <strong class="article-nav-caption">Older</strong>
+        <div class="article-nav-title">Break the wall, easy like 123</div>
+      </a>
     
   </nav>
 
@@ -173,6 +184,9 @@
       <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
     </ul>
   </div>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
 </footer>
 
 </main>
