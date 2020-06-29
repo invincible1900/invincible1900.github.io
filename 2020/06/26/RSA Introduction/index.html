@@ -106,15 +106,15 @@
 <li>the most commonly chosen value for e is 2^16 + 1 = 65,537. </li>
 <li>e is released as part of the <code>public key</code></li>
 </ul>
-<p>5.Determine d as d ≡ e−1 (mod φ(n))</p>
+<p>5.Determine d as d ≡( e^−1) (mod φ(n))</p>
 <ul>
 <li>d is the <code>modular multiplicative inverse</code> of e <code>modulo</code> φ(n).</li>
-<li>This means: solve for d the equation d⋅e ≡ 1 (mod λ(n));  </li>
+<li>This means: solve for d the equation d⋅e ≡ 1 (mod φ(n));  </li>
 <li>or  ed - 1 = kφ(n) (k is an integer coefficient)</li>
 <li>d is kept secret as the <code>private key exponent</code>.</li>
 </ul>
 <p>example: </p>
-<pre><code>step 1 
+<pre><code class="line-numbers language-c">step 1 
 p = 61 (prime1)
 q = 53 (prime2)
 
@@ -136,22 +136,24 @@ step 5
 d = (k*3120 + 1)/17 -&gt; d = 2753 and k = 15
 (ed - 1 = kφ(n) , d is kept secret as the private key exponent )
 
-</code></pre><h4 id="Key-distribution"><a href="#Key-distribution" class="headerlink" title="Key distribution"></a>Key distribution</h4><p>Suppose that Bob wants to send information to Alice.  </p>
+</code></pre>
+<h4 id="Key-distribution"><a href="#Key-distribution" class="headerlink" title="Key distribution"></a>Key distribution</h4><p>Suppose that Bob wants to send information to Alice.  </p>
 <p>If they decide to use RSA, Bob must know Alice’s public key to encrypt the message and Alice must use her private key to decrypt the message.   </p>
 <p>To enable Bob to send his encrypted messages, Alice transmits her public key (n, e) to Bob via a reliable, but not necessarily secret, route.   </p>
 <p>Alice’s private key (d) is never distributed.  </p>
 <p>With the example above:  </p>
-<pre><code>Alice transmits her public key (3233, 17) to Bob 
+<pre><code class="line-numbers language-c">Alice transmits her public key (3233(n), 17(e)) to Bob 
 
-Alice&#39;s private key (2753) is never distributed.  
-</code></pre><h4 id="Encryption"><a href="#Encryption" class="headerlink" title="Encryption"></a>Encryption</h4><p>After Bob obtains Alice’s public key, he can send a message M to Alice.</p>
+Alice&#39;s private key (2753(d)) is never distributed.  
+</code></pre>
+<h4 id="Encryption"><a href="#Encryption" class="headerlink" title="Encryption"></a>Encryption</h4><p>After Bob obtains Alice’s public key, he can send a message M to Alice.</p>
 <p>To do it, he first turns M (strictly speaking, the un-padded plaintext) into an integer m (strictly speaking, the padded plaintext), such that 0 ≤ m &lt; n by using an agreed-upon reversible protocol known as a padding scheme. </p>
 <p>He then computes the ciphertext c, using Alice’s public key e, corresponding to</p>
-<p>m^e ≡ c (mod n)</p>
+<p><code>m^e ≡ c (mod n)</code></p>
 <p>This can be done reasonably quickly, even for very large numbers, using modular exponentiation. </p>
 <p>Bob then transmits c to Alice.</p>
 <p>With the example above:  </p>
-<pre><code>0 ≤ m &lt; 3233
+<pre><code class="line-numbers language-c">0 ≤ m &lt; 3233
 
 let m = 65
 
@@ -160,21 +162,23 @@ let m = 65
 
 means 
 
-65^17 mod 3233 = c mod 3233 = 2790
+65^17 mod 3233 = c mod 3233 = c = 2790
 
 so that c is 2790
 
 ciphertext c : 2790
 
 Bob then transmits 2790 to Alice.
-</code></pre><h4 id="Decryption"><a href="#Decryption" class="headerlink" title="Decryption"></a>Decryption</h4><p>Alice can recover m from c by using her private key exponent d by computing</p>
+</code></pre>
+<h4 id="Decryption"><a href="#Decryption" class="headerlink" title="Decryption"></a>Decryption</h4><p>Alice can recover m from c by using her private key exponent d by computing</p>
 <p>c^d ≡ m (mod n)</p>
 <p>Given m, she can recover the original message M by reversing the padding scheme.</p>
 <p>With the example above:  </p>
-<pre><code>2790 ^ 2753 mod 3233 = m mod 3233 = 65
+<pre><code class="line-numbers language-c">2790 ^ 2753 mod 3233 = m mod 3233 = m = 65
 
 so that original message m is 65
-（0 ≤ m &lt; 3233）</code></pre><h3 id="OpenSSL"><a href="#OpenSSL" class="headerlink" title="OpenSSL"></a>OpenSSL</h3><h4 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h4><pre><code>OpenSSL is a cryptography toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) network protocols and related cryptography standards required by them.
+（0 ≤ m &lt; 3233）</code></pre>
+<h3 id="OpenSSL"><a href="#OpenSSL" class="headerlink" title="OpenSSL"></a>OpenSSL</h3><h4 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h4><pre><code>OpenSSL is a cryptography toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) network protocols and related cryptography standards required by them.
 
 The openssl program is a command line tool for using the various cryptography functions of OpenSSL&#39;s crypto library from the shell.  
 
@@ -308,7 +312,7 @@ SOw6QOeA7eK7Cqb23uhEHNVGTWIyfla7vTgCQVvGstwy+GK9wZc+RxkCAwEAAQ==
 
 </code></pre>
 <p>Actually, all necessary components are contained in the private key (as public key is generated from it)  </p>
-<pre><code>Components in decimal：
+<pre><code class="line-numbers language-c">Components in decimal：
 
 RSAPrivateKey ::= SEQUENCE {
     version           Version,
@@ -348,8 +352,9 @@ exponent2:
 coefficient:
 92692181949152002934866516712055657528238139292325940738620642012199537862196
 
-</code></pre><p>The calculation results are in accordance with the formula given by RSA algorithm.</p>
-<pre><code>n = p*q
+</code></pre>
+<p>The calculation results are in accordance with the formula given by RSA algorithm.</p>
+<pre><code class="line-numbers language-c">n = p*q
 9342476369954125105013518063637947250633127631914962114151554077236694762154479438482753076646860769099783261599822822950591061221804460245739288058021657 = 106769316984203726179234006422249731411299598252225036982335474258624485715809 * 87501509177363407726111229050956843213780881752775214691913056067338173516473
 
 
@@ -368,12 +373,15 @@ d % (q - 1 ) = exponent2
 
 coefficient * q mod p = 1
 
-87501509177363407726111229050956843213780881752775214691913056067338173516473 * 92692181949152002934866516712055657528238139292325940738620642012199537862196 % 106769316984203726179234006422249731411299598252225036982335474258624485715809</code></pre><p>Encryption and decryption are a little bit complex because of the existence of padding. And I don’t know how to calculate such a large square.</p>
-<pre><code>Encrypt
-m^e ≡ c (mod n)</code></pre><pre><code>Decrypt
-c^d ≡ m (mod n)
+87501509177363407726111229050956843213780881752775214691913056067338173516473 * 92692181949152002934866516712055657528238139292325940738620642012199537862196 % 106769316984203726179234006422249731411299598252225036982335474258624485715809</code></pre>
+<p>Encryption and decryption are a little bit complex because of the existence of padding. And I don’t know how to calculate such a large square.</p>
+<pre><code class="line-numbers language-c">Encrypt
+m^e ≡ c (mod n) or c = m^e mod n</code></pre>
+<pre><code class="line-numbers language-c">Decrypt
+c^d ≡ m (mod n) or m = c^d mod n
 
-213792897104438840793271759838378922731467415405262471787500296815339149509241922986876635280379424514767761727441019192952224390696522553473310250868931 ** 3600168465495696011827157158508573139062508786548245543630277525987041308241244974734382388158592691604637844876350290463320734391269641528796916748499713 % 9342476369954125105013518063637947250633127631914962114151554077236694762154479438482753076646860769099783261599822822950591061221804460245739288058021657</code></pre><h3 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h3><pre><code class="line-numbers language-c">// https://elixir.bootlin.com/linux/v5.7/source/include/crypto/internal/rsa.h#L31
+213792897104438840793271759838378922731467415405262471787500296815339149509241922986876635280379424514767761727441019192952224390696522553473310250868931 ** 3600168465495696011827157158508573139062508786548245543630277525987041308241244974734382388158592691604637844876350290463320734391269641528796916748499713 % 9342476369954125105013518063637947250633127631914962114151554077236694762154479438482753076646860769099783261599822822950591061221804460245739288058021657</code></pre>
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h3><pre><code class="line-numbers language-c">// https://elixir.bootlin.com/linux/v5.7/source/include/crypto/internal/rsa.h#L31
 /**
  * rsa_key - RSA key structure
  * @n           : RSA modulus raw byte stream
