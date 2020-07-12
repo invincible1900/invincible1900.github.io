@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    How to use Intel SDM learn X86-64 assembly |
+    
+    Be curious, not judgemental.</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+  <link rel="stylesheet" href="/js/prism/prism.css">
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+<main class="content">
+  <section class="outer">
+  <article id="post-Intel SDM guide" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+  
+    <h1 class="article-title" itemprop="name">
+      How to use Intel SDM learn X86-64 assembly
+    </h1>
+  
+  
+
+
+
+
+            </header>
+            
+
+                
+                    <div class="article-meta">
+                        <a href="/2020/07/12/Intel%20SDM%20guide/" class="article-date">
+  <time datetime="2020-07-12T12:43:45.465Z" itemprop="datePublished">2020-07-12</time>
+</a>
+                            
+                    </div>
+                    
+
+                        
+                            
+    <div class="tocbot"></div>
+
+
+
+
+
+                                
+
+                                    <div class="article-entry" itemprop="articleBody">
+                                        
+
+
+                                            
+
+                                                
+                                                                    <p>This article is mainly about Intel x64 and IA-32 Architechtures Software Developer’s Manual Volume 2 - Instruction Set Reference.</p>
+<p>What I have done:</p>
+<ul>
+<li>Reorgnized some infomation from both <a href="https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html" target="_blank" rel="noopener">Intel SDM</a> and <a href="https://www.amd.com/system/files/TechDocs/40332.pdf" target="_blank" rel="noopener">ARM Manual</a>.</li>
+<li>Quoted as little information as possible that I need to remember, and reorgnized them to help understand.</li>
+<li>Gave some examples.</li>
+</ul>
+<p>Keyword: Intel, AMD,  X86-64,  assembly</p>
+<a id="more"></a>
+
+<h3 id="Read-this-first"><a href="#Read-this-first" class="headerlink" title="Read this first"></a>Read this first</h3><p>The Intel 64 and IA-32 architectures instruction encodings are subsets of the format shown in Figure 2-1. Instructions consist of <code>optional instruction prefixes</code> (in any order), <code>primary opcode bytes</code> (up to three bytes), an addressing-form specifier (if required) consisting of the <code>ModR/M byte</code>and sometimes the<code>SIB (Scale-Index-Base) byte</code>, a <code>displacement</code> (if required), and an <code>immediate data</code> field (if required).</p>
+<img src="https://gitee.com/invincible1900/pictures/raw/master/intel_insn_fmt.png" alt="intel_insn_fmt.png" style="zoom:30%;" />
+
+<h4 id="REX"><a href="#REX" class="headerlink" title="REX"></a>REX</h4><p>REX prefixes are instruction-prefix bytes used in 64-bit mode.</p>
+<img src="https://gitee.com/invincible1900/pictures/raw/master/Intel-prefix-ordering-in-64bit-mode.png" alt="Intel-prefix-ordering-in-64bit-mode.png" style="zoom:40%;" />
+
+<p>REX Prefix Fields [BITS: 0100WRXB]  </p>
+<img src="https://gitee.com/invincible1900/pictures/raw/master/Intel-REX-prefix.png" alt="Intel-REX-prefix.png" style="zoom:40%;" />
+
+<p>In 64-bit mode, the instruction’s default operation size is 32 bits. … Using a REX prefix in the form of REX.W promotes operation to 64 bits.</p>
+<h4 id="ModR-M"><a href="#ModR-M" class="headerlink" title="ModR/M"></a>ModR/M</h4><p>Many instructions that refer to an operand in memory have an addressing-form specifier byte (called the ModR/M byte) following the primary opcode.   </p>
+<pre><code class="line-numbers language-shell"> 7   6 5          3 2   0
+| Mod | Reg/Opcode | R/M |</code></pre>
+<img src="https://gitee.com/invincible1900/pictures/raw/master/AMD-ModRM-encoding.png" alt="AMD-ModRM-encoding.png" style="zoom:50%;" />
+
+
+
+<p>ModRM.mod (Bits[7:6]). The mod field is used with the r/m field to specify the addressing mode for an operand. </p>
+<p>ModRM.reg (Bits[5:3]). The reg field is mainly used to specify a register-based operand. </p>
+<p>ModRM.r/m (Bits[2:0]). As stated above, the r/m field is used in combination with the mod field to encode 32 different operand specifications .</p>
+<img src="https://gitee.com/invincible1900/pictures/raw/master/AMD-ModRM-Byte-Encoding.png" alt="AMD-ModRM-Byte-Encoding.png" style="zoom:50%;" />
+
+
+
+<img src="https://gitee.com/invincible1900/pictures/raw/master/AMD-ModRM-Byte-Encoding_2.png" alt="AMD-ModRM-Byte-Encoding.png" style="zoom:50%;" />
+
+<p>How dose REX prefix and ModR/M byte work for operand addressing?</p>
+<img src="https://gitee.com/invincible1900/pictures/raw/master/AMD-REX.png" alt="AMD-REX.png" style="zoom:40%;" />
+
+<p>example :</p>
+<pre><code class="line-numbers language-shell">Let:
+REX.W = 1
+REX.B = 1
+REX.R = 0
+REX.X = 0
+
+ModRM.mod = 01
+ModRM.reg = 001
+ModRM.r/m = 000
+
+referring to the table above, we can get:
+
+REX.R(0) and ModRM.reg(001) together stands for RCX
+REX.B(1), ModRM.mod(01) and ModRM.r/m(000) togather stands for  [R8] + dis8
+</code></pre>
+<p>A table for the general purpose 64-bit registers :</p>
+<pre><code class="line-numbers language-shell">_.Reg  Register
+----------------
+0.000   RAX
+0.001   RCX
+0.010   RDX
+0.011   RBX
+0.100   RSP
+0.101   RBP（if ModRM.mod = 00 -&gt; RIP）
+0.110   RSI
+0.111   RDI
+1.000   R8
+1.001   R9
+1.010   R10
+1.011   R11
+1.100   R12
+1.101   R13 （if ModRM.mod = 00 -&gt; RIP）
+1.110   R14
+1.111   R15
+
+_ is REX.R or REX.B</code></pre>
+<h4 id="Notations"><a href="#Notations" class="headerlink" title="Notations"></a>Notations</h4><ul>
+<li>/digit — A digit between 0 and 7 indicates that the ModR/M byte of the instruction uses only the r/m (register or memory) operand. The reg field contains the digit that provides an extension to the instruction’s opcode.<br>【/digit 表示只使用Mod的r/m部分，数字是操作数的长度】</li>
+<li>/r — Indicates that the ModR/M byte of the instruction contains a register operand and an r/m operand.<br>【/r 表示指令的操作数包含register和r/m 两种】</li>
+<li>cb, cw, cd, cp, co, ct — A 1-byte (cb), 2-byte (cw), 4-byte (cd), 6-byte (cp), 8-byte (co) or 10-byte (ct) value following the opcode. </li>
+<li>ib, iw, id, io — A 1-byte (ib), 2-byte (iw), 4-byte (id) or 8-byte (io) immediate operand to the instruction that follows the opcode, ModR/M bytes or scale-indexing bytes. </li>
+</ul>
+<ul>
+<li>r64 — One of the quadword general-purpose registers: RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8–R15. These are available when using REX.R and 64-bit mode.</li>
+<li>imm64 — An immediate quadword value used for instructions whose operand-size attribute is 64 bits. The value allows the use of a number between +9,223,372,036,854,775,807 and – 9,223,372,036,854,775,808 inclusive.</li>
+<li>r/m64 — A quadword general-purpose register or memory operand used for instructions whose operand-size attribute is 64 bits when using REX.W. Quadword general-purpose registers are: RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8–R15; these are available only in 64-bit mode. The contents of memory are found at the address provided by the effective address computation.</li>
+</ul>
+<h3 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h3><h4 id="example-1"><a href="#example-1" class="headerlink" title="example 1"></a>example 1</h4><p>How does <code>add r8,QWORD PTR [rdi+0xa]</code> be translated to <code>4C 03 47 0A</code>?  </p>
+<pre><code>0x10000:      4C 03 47 0A            add r8,QWORD PTR [rdi+0xa]</code></pre><p>This is the format of <code>ADD</code> instruction:<br><img src="https://gitee.com/invincible1900/pictures/raw/master/Intel-Inst-ADD.png" alt="Intel-Inst-ADD.png" style="zoom:40%;" /></p>
+<p>Let’s focus on this line :</p>
+<pre><code class="line-numbers language-shell">Opcode      Instruction     Op/  64-bit Compat/   Description
+                            En   Mode   Leg Mode
+REX.W+03 /r  ADD r64,r/m64   RM   Valid  N.E.      Add r/m64 to r64.</code></pre>
+<p>In 64-bit mode, the instruction’s default operation size is 32 bits. … Using a REX prefix in the form of REX.W promotes operation to 64 bits.</p>
+<p>So, we get</p>
+<pre><code class="line-numbers language-shell">REX.W = 1</code></pre>
+<p>SIB is not used in this instruction. Hence,</p>
+<pre><code class="line-numbers language-shell">REX.X = 0</code></pre>
+<p>Let’s further look at the encoding of the operands. From the “Instruction Operand Encoding” for the add instruction:</p>
+<pre><code class="line-numbers language-shell">Op/En Operand 1      Operand 2    Operand 3 Operand 4
+RM    ModRM:reg(r,w) ModRM:r/m(r) NA        NA</code></pre>
+<p>operand 1 is register r8, hence,</p>
+<pre><code class="line-numbers language-shell">REX.R = 1
+ModRM.reg = 000</code></pre>
+<p> As 0xa can be encoded in a byte, we can use disp8 to keep the instruction encoding short:</p>
+<pre><code class="line-numbers language-shell"> ModRM.mod = 01 </code></pre>
+<p> opreand 2 is QWORD PTR [rdi+0xa], so we get:</p>
+<pre><code class="line-numbers language-shell"> REX.B = 0
+ ModRM.r/m = 111</code></pre>
+<p>put them together:</p>
+<pre><code class="line-numbers language-c">REX           |    opcode     |   ModR/M  | displacement |
+01001100           00000011       01000111  00001010
+
+4c 03 47 0a</code></pre>
+<p>just the same as compiled by the assembler.</p>
+<h4 id="example-2"><a href="#example-2" class="headerlink" title="example 2"></a>example 2</h4><pre><code class="line-numbers language-c">4c 8b 35 bf 26 83 01    mov    r14,QWORD PTR [rip+0x18326bf] </code></pre>
+<p>The format of instruction MOV:</p>
+<img src="https://gitee.com/invincible1900/pictures/raw/master/Intel-Inst-MOV-1.png" alt="Intel-Inst-MOV-1.png" style="zoom:40%;" />
+
+<p>First:</p>
+<pre><code class="line-numbers language-c">REX.W = 1
+REX.X = 0
+opcode = 0x8B</code></pre>
+<p>operand1 is r8:</p>
+<pre><code class="line-numbers language-c">REX.R = 1
+ModRM.reg = 000 </code></pre>
+<p>operand2 is [rip + 0x18326bf]:</p>
+<img src="https://gitee.com/invincible1900/pictures/raw/master/ModRM-RIP.png" alt="ModRM-RIP-1.png" style="zoom:40%;" />
+
+<pre><code class="line-numbers language-c">REX.B = 0
+ModRM.r/m = 101
+ModRM.mod = 00</code></pre>
+<p>put  together:</p>
+<pre><code class="line-numbers language-c">REX           |    opcode     |   ModR/M  | displacement |
+01001100           10001011       00000101  0x18326bf
+
+4c 8b 05 bf 26 83 01</code></pre>
+<p>wow~</p>
+<h4 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h4><p>We can find a matching structure in the Linux kernel:</p>
+<pre><code class="line-numbers language-c">// arch/x86/include/asm/insn.h 
+struct insn {
+        struct insn_field prefixes;     /*
+                                         * Prefixes
+                                         * prefixes.bytes[3]: last prefix
+                                         */
+        struct insn_field rex_prefix;   /* REX prefix */
+        struct insn_field vex_prefix;   /* VEX prefix */
+        struct insn_field opcode;       /*
+                                         * opcode.bytes[0]: opcode1
+                                         * opcode.bytes[1]: opcode2
+                                         * opcode.bytes[2]: opcode3
+                                         */
+        struct insn_field modrm;
+        struct insn_field sib;
+        struct insn_field displacement;
+        union {
+                struct insn_field immediate;
+                struct insn_field moffset1;     /* for 64bit MOV */
+                struct insn_field immediate1;   /* for 64bit imm or off16/32 */
+        };
+        union {
+                struct insn_field moffset2;     /* for 64bit MOV */
+                struct insn_field immediate2;   /* for 64bit imm or seg16 */
+        };
+
+        insn_attr_t attr;
+        unsigned char opnd_bytes;
+        unsigned char addr_bytes;
+        unsigned char length;
+        unsigned char x86_64;
+
+        const insn_byte_t *kaddr;       /* kernel address of insn to analyze */
+        const insn_byte_t *end_kaddr;   /* kernel address of last insn in buffer */
+        const insn_byte_t *next_byte;
+};</code></pre>
+<h3 id="Refs"><a href="#Refs" class="headerlink" title="Refs"></a>Refs</h3><p><em>Intel® 64 and IA-32 Architectures Software Developer’s Manual Volume 2</em><br>2.1.3 ModR/M and SIB Bytes<br>2.2.1.6 RIP-Relative Addressing<br>2.2 IA-32E MODE<br>2.2.1 REX Prefixes<br>2.2.1.1 Encoding<br>2.2.1.2 More on REX Prefix Fields<br>3.1.1.1 Opcode Column in the Instruction Summary Table (Instructions without VEX Prefix)<br>3.1.1.3 Instruction Column in the Opcode Summary Table</p>
+<p><em>AMD64 Architecture Programmer’s Manual Volume 3</em><br>Appendix A Opcode and Operand Encodings</p>
+<h3 id="Toos"><a href="#Toos" class="headerlink" title="Toos"></a>Toos</h3><p><a href="https://shahril96.github.io/Online-Assembler-Disassembler/" target="_blank" rel="noopener">Disassembler</a><br><a href="https://onlinedisassembler.com/odaweb/" target="_blank" rel="noopener">Disassembler2</a></p>
+<h3 id="Referrences"><a href="#Referrences" class="headerlink" title="Referrences"></a>Referrences</h3><p><a href="https://www.systutorials.com/beginners-guide-x86-64-instruction-encoding/" target="_blank" rel="noopener">https://www.systutorials.com/beginners-guide-x86-64-instruction-encoding/</a></p>
+<p><a href="https://wiki.osdev.org/X86-64_Instruction_Encoding" target="_blank" rel="noopener">https://wiki.osdev.org/X86-64_Instruction_Encoding</a></p>
+
+                                                                        
+                                    </div>
+                                    <footer class="article-footer">
+                                        <a data-url="http://yoursite.com/2020/07/12/Intel%20SDM%20guide/" data-id="ckcj81e5a0000ibgr5km16uxl" class="article-share-link">
+                                            Share
+                                        </a>
+                                        
+                                    </footer>
+
+    </div>
+
+    
+        
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/06/26/RSA%20Introduction/" class="article-nav-link">
+        <strong class="article-nav-caption">Older</strong>
+        <div class="article-nav-title">RSA algorithm and openssl</div>
+      </a>
+    
+  </nav>
+
+
+            
+
+                
+                    
+                        
+                            
+
+</article>
+</section>
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+    <li><i class="fe fe-bookmark"></i> <span id="busuanzi_value_page_pv"></span></li>
+  
+</ul>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2020 Be curious, not judgemental.</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+  <script src="/js/prism/prism.js" async></script>
+
+</footer>
+
+
+</main>
+<aside class="sidebar">
+  <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/logo.svg" alt="Be curious, not judgemental."></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+</aside>
+
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+  
+<script src="/js/tocbot.min.js"></script>
+
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+
+<script src="/js/ocean.js"></script>
+
+
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
