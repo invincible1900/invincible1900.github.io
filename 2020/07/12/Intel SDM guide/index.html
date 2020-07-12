@@ -152,18 +152,24 @@ REX.B(1), ModRM.mod(01) and ModRM.r/m(000) togather stands for  [R8] + dis8
 
 _ is REX.R or REX.B</code></pre>
 <h4 id="Notations"><a href="#Notations" class="headerlink" title="Notations"></a>Notations</h4><ul>
-<li>/digit — A digit between 0 and 7 indicates that the ModR/M byte of the instruction uses only the r/m (register or memory) operand. The reg field contains the digit that provides an extension to the instruction’s opcode.<br>【/digit 表示只使用Mod的r/m部分，数字是操作数的长度】</li>
-<li>/r — Indicates that the ModR/M byte of the instruction contains a register operand and an r/m operand.<br>【/r 表示指令的操作数包含register和r/m 两种】</li>
-<li>cb, cw, cd, cp, co, ct — A 1-byte (cb), 2-byte (cw), 4-byte (cd), 6-byte (cp), 8-byte (co) or 10-byte (ct) value following the opcode. </li>
-<li>ib, iw, id, io — A 1-byte (ib), 2-byte (iw), 4-byte (id) or 8-byte (io) immediate operand to the instruction that follows the opcode, ModR/M bytes or scale-indexing bytes. </li>
-</ul>
-<ul>
-<li>r64 — One of the quadword general-purpose registers: RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8–R15. These are available when using REX.R and 64-bit mode.</li>
-<li>imm64 — An immediate quadword value used for instructions whose operand-size attribute is 64 bits. The value allows the use of a number between +9,223,372,036,854,775,807 and – 9,223,372,036,854,775,808 inclusive.</li>
-<li>r/m64 — A quadword general-purpose register or memory operand used for instructions whose operand-size attribute is 64 bits when using REX.W. Quadword general-purpose registers are: RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8–R15; these are available only in 64-bit mode. The contents of memory are found at the address provided by the effective address computation.</li>
+<li><p>/digit — A digit between 0 and 7 indicates that the ModR/M byte of the instruction uses only the r/m (register or memory) operand. The reg field contains the digit that provides an extension to the instruction’s opcode.</p>
+</li>
+<li><p>/r — Indicates that the ModR/M byte of the instruction contains a register operand and an r/m operand.</p>
+</li>
+<li><p>cb, cw, cd, cp, co, ct — A 1-byte (cb), 2-byte (cw), 4-byte (cd), 6-byte (cp), 8-byte (co) or 10-byte (ct) value following the opcode. </p>
+</li>
+<li><p>ib, iw, id, io — A 1-byte (ib), 2-byte (iw), 4-byte (id) or 8-byte (io) immediate operand to the instruction that follows the opcode, ModR/M bytes or scale-indexing bytes. </p>
+</li>
+<li><p>r64 — One of the quadword general-purpose registers: RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8–R15. These are available when using REX.R and 64-bit mode.</p>
+</li>
+<li><p>imm64 — An immediate quadword value used for instructions whose operand-size attribute is 64 bits. The value allows the use of a number between +9,223,372,036,854,775,807 and – 9,223,372,036,854,775,808 inclusive.</p>
+</li>
+<li><p>r/m64 — A quadword general-purpose register or memory operand used for instructions whose operand-size attribute is 64 bits when using REX.W. Quadword general-purpose registers are: RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8–R15; these are available only in 64-bit mode. The contents of memory are found at the address provided by the effective address computation.</p>
+</li>
 </ul>
 <h3 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h3><h4 id="example-1"><a href="#example-1" class="headerlink" title="example 1"></a>example 1</h4><p>How does <code>add r8,QWORD PTR [rdi+0xa]</code> be translated to <code>4C 03 47 0A</code>?  </p>
-<pre><code>0x10000:      4C 03 47 0A            add r8,QWORD PTR [rdi+0xa]</code></pre><p>This is the format of <code>ADD</code> instruction:<br><img src="https://gitee.com/invincible1900/pictures/raw/master/Intel-Inst-ADD.png" alt="Intel-Inst-ADD.png" style="zoom:40%;" /></p>
+<pre><code class="line-numbers language-c">0x10000:      4C 03 47 0A            add r8,QWORD PTR [rdi+0xa]</code></pre>
+<p>This is the format of <code>ADD</code> instruction:<br><img src="https://gitee.com/invincible1900/pictures/raw/master/Intel-Inst-ADD.png" alt="Intel-Inst-ADD.png" style="zoom:40%;" /></p>
 <p>Let’s focus on this line :</p>
 <pre><code class="line-numbers language-shell">Opcode      Instruction     Op/  64-bit Compat/   Description
                             En   Mode   Leg Mode
