@@ -167,7 +167,7 @@ _ is REX.R or REX.B</code></pre>
 <li><p>r/m64 — A quadword general-purpose register or memory operand used for instructions whose operand-size attribute is 64 bits when using REX.W. Quadword general-purpose registers are: RAX, RBX, RCX, RDX, RDI, RSI, RBP, RSP, R8–R15; these are available only in 64-bit mode. The contents of memory are found at the address provided by the effective address computation.</p>
 </li>
 </ul>
-<h3 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h3><h4 id="example-1"><a href="#example-1" class="headerlink" title="example 1"></a>example 1</h4><p>How does <code>add r8,QWORD PTR [rdi+0xa]</code> be translated to <code>4C 03 47 0A</code>?  </p>
+<h3 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h3><h4 id="example-1"><a href="#example-1" class="headerlink" title="example 1"></a>example 1</h4><p>How does <code>add r8,QWORD PTR [rdi+0xa]</code>  translate into <code>4C 03 47 0A</code>?  </p>
 <pre><code class="line-numbers language-c">0x10000:      4C 03 47 0A            add r8,QWORD PTR [rdi+0xa]</code></pre>
 <p>This is the format of <code>ADD</code> instruction:<br><img src="https://gitee.com/invincible1900/pictures/raw/master/Intel-Inst-ADD.png" alt="Intel-Inst-ADD.png" style="zoom:40%;" /></p>
 <p>Let’s focus on this line :</p>
